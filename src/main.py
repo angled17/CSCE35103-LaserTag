@@ -1,5 +1,9 @@
+from database import Database
+from gui import Game
+
 def main():
-    print("This is running from the main file")
+    d = Database()
+    g = Game(d)
 
 
 if __name__ == "__main__":
