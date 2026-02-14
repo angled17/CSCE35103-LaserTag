@@ -20,43 +20,35 @@ class PlayerEntryFrame(ttk.Frame):
 
         self.start_list_row = 6
 
-        self.widgets = []
-        self.red_team_labels = []
-        self.green_team_labels = []
-
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
+        self.entries = []
+        self.player_labels = []
 
         # Add Player
         add_player_label = ttk.Label(self, text="Add a Player:")
         add_player_label.grid(row=0, column=0, pady=2, columnspan=4)
-        self.widgets.append(add_player_label)
 
         enter_id_entry = LabeledEntry(self, label="Enter ID:", textvariable=self.add_player_id)
         enter_id_entry.grid(row=1, column=0, pady=2, columnspan=4)
-        self.widgets.append(enter_id_entry)   
+        self.entries.append(enter_id_entry)   
 
         enter_name_entry = LabeledEntry(self, label="Enter Name:", textvariable=self.add_player_name)
         enter_name_entry.grid(row=2, column=0, pady=2, columnspan=4)
-        self.widgets.append(enter_name_entry)
+        self.entries.append(enter_name_entry)
 
         enter_equipment_entry = LabeledEntry(self, label="Enter Equipment ID:", textvariable=self.add_player_equip_id)
         enter_equipment_entry.grid(row=3, column=0, pady=2, columnspan=4)
-        self.widgets.append(enter_equipment_entry)
+        self.entries.append(enter_equipment_entry)
 
         add_player_button = ttk.Button(self, text="Add Player", command=self.add_player)
         add_player_button.grid(row=4, column=0, pady=2, columnspan=4)
-        self.widgets.append(add_player_button)
 
         # Red Team - Left
         red_team_label = ttk.Label(self, text="Red Team")
-        red_team_label.grid(row=5, column=0, padx=10, pady=10, columnspan=2, sticky="nsew")
-        self.widgets.append(red_team_label)
+        red_team_label.grid(row=5, column=0, padx=10, pady=10, columnspan=2)
 
         # Green Team - Right
         green_team_label = ttk.Label(self, text="Green Team")
-        green_team_label.grid(row=5, column=2, padx=10, pady=10, columnspan=2, sticky="nsew")
-        self.widgets.append(green_team_label)
+        green_team_label.grid(row=5, column=2, padx=10, pady=10, columnspan=2)
 
         self.pack()
 
@@ -96,25 +88,38 @@ class PlayerEntryFrame(ttk.Frame):
         if self.db.add_player(id, name):
             if equip_id % 2 == 0:
                 self.game.red_team[id] = equip_id
-                self.red_team_labels.append(ttk.Label(self, text=f"{id} | {name} | {equip_id}"))
             else:
                 self.game.green_team[id] = equip_id
-                self.green_team_labels.append(ttk.Label(self, text=f"{id} | {name} | {equip_id}"))
+                # self.green_team_labels.append(ttk.Label(self, text=f"{id} | {name} | {equip_id}"))
             
+            for entry in self.entries:
+                entry.on_update()
+        
             self.update_player_list()
         else:
             Messagebox.ok(self.db.get_error_message(), "Error!")
 
     
     def update_player_list(self):
+        # Destory Player Labels
+        for l in self.player_labels:
+            l.destroy()
+
         # Update Red
         red_index = self.start_list_row
         green_index = self.start_list_row
 
-        for red_player in self.red_team_labels:
-            red_player.grid(row=red_index, column=1)
+        for red_player_id in self.game.red_team:
+            t_lab = ttk.Label(self, text=f"{red_player_id} | {self.db.get_player_from_id(red_player_id)} | {self.game.red_team[red_player_id]}")
+            t_lab.grid(row=red_index, column=1, padx=5)
+            self.player_labels.append(t_lab)
+
             red_index += 1
 
-        for green_player in self.green_team_labels:
-            green_player.grid(row=green_index, column=3)
+        for green_player_id in self.game.green_team:
+            t_lab = ttk.Label(self, text=f"{green_player_id} | {self.db.get_player_from_id(green_player_id)} | {self.game.green_team[green_player_id]}")
+            t_lab.grid(row=green_index, column=3, padx=5)
+            self.player_labels.append(t_lab)
+
             green_index += 1
+

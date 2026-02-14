@@ -20,3 +20,7 @@ class LabeledEntry(ttk.Entry):
     def on_exit(self, event=None):
         if not self.get():
             self.insert(0, self.label)
+
+    def on_update(self):
+        self.delete(0, tk.END)
+        self.insert(0, self.label)

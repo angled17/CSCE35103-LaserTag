@@ -109,9 +109,9 @@ class Database:
         for entry in result:
             if entry[0] == id:
                 return entry[1]
-            else:
-                self.error_message = 'ID "{}" not found in database.'
-                return ""
+
+        self.error_message = 'ID "{}" not found in database.'.format(id)
+        return ""
     
 
     def get_error_message(self) -> str:
