@@ -1,6 +1,9 @@
 from database import Database
-from gui import App, SplashFrame, PlayerEntryFrame
-from tkinter.ttk import Style
+# from gui import App, SplashFrame, PlayerEntryFrame
+from gui.SplashFrame import SplashFrame
+from gui.PlayerEntryFrame import PlayerEntryFrame
+from game import App
+
 
 def main():
     d = Database()

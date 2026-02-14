@@ -1,11 +1,12 @@
 import psycopg
-from logger import general_message
+from log.logger import general_message
 
 
 class Database:
     def __init__(self):
         self.conn = None
         self.cur = None
+        self.error_message = ""
 
     def connect(self):
         self.conn = psycopg.connect("dbname=photon user=student")
@@ -20,10 +21,9 @@ class Database:
     # Adds a player to the "players" table in the "photon" database
     # Returns True if the name was successfully added to the database
     # Returns False if the name was not added to the database
-    def add_player(self, name: str) -> bool:
+    def add_player(self, id: int, name: str) -> bool:
         current_names = []
         current_ids = []
-        max_id = None
 
         self.cur.execute("SELECT codename FROM players")
         result = self.cur.fetchall()
@@ -34,7 +34,8 @@ class Database:
 
         # Checks if name is in current names. Returns False if it is.
         if name in current_names:
-            general_message(f'"{name}" is already being used!')
+            self.error_message = 'Name "{}" is already being used!'.format(name)
+            general_message(self.error_message)
             return False
         
         self.cur.execute("SELECT id FROM players")
@@ -43,15 +44,20 @@ class Database:
         # Adds ids into list
         for entry in result:
             current_ids.append(entry[0])
+
+        # Checks if id is in current ids. Returns False if it is.
+        if id in current_ids:
+            self.error_message = 'ID "{}" is already being used!'.format(id)
+            general_message(self.error_message)
+            return False
         
-        # Stores max ID
-        max_id = max(current_ids)
         
         # Insert into players
-        self.cur.execute("INSERT INTO players (id, codename) VALUES (%s, %s)", (max_id + 1, name))
+        self.cur.execute("INSERT INTO players (id, codename) VALUES (%s, %s)", (id, name))
         self.conn.commit()
-        general_message(f"Added ID: {max_id + 1} | Player: {name} to the database!")
+        general_message(f"Added ID: {id} | Player: {name} to the database!")
         
+        self.error_message = ""
         return True
     
 
@@ -67,7 +73,8 @@ class Database:
             current_names.append(entry[0])
 
         if name not in current_names:
-            general_message(f'"{name}" is not in the database!')
+            self.error_message = f'"{name}" is not in the database!'
+            general_message(self.error_message)
             return False
         
         self.cur.execute("DELETE FROM players WHERE codename = (%s) RETURNING id", (name,))
@@ -78,7 +85,37 @@ class Database:
 
         general_message(f"Removed ID: {result} | Player: {name} from the database!")
 
+        self.error_message = ""
         return True
+    
+    # Returns List [(id: int, codename: str), ...]
+    def get_players(self) -> dict:
+        players = {}
+
+        self.cur.execute("SELECT * FROM players")
+        result = self.cur.fetchall()
+
+        for entry in result:
+            players[entry[0]] = entry[1]
+
+        self.error_message = ""
+        return players
+    
+
+    def get_player_from_id(self, id: int) -> str:
+        self.cur.execute("SELECT * FROM players")
+        result = self.cur.fetchall()
+
+        for entry in result:
+            if entry[0] == id:
+                return entry[1]
+            else:
+                self.error_message = 'ID "{}" not found in database.'
+                return ""
+    
+
+    def get_error_message(self) -> str:
+        return self.error_message
 
 
 def debug_database(d: Database):
@@ -89,6 +126,7 @@ def debug_database(d: Database):
         print("What do you want to do?")
         print("1. Add player to database.")
         print("2. Remove player from database.")
+        print("3. Get All Players")
         print("q. Quit")
         print("> ", end="")
 
@@ -98,11 +136,14 @@ def debug_database(d: Database):
             case "q":
                 running = False
             case "1":
-                n = input("What name do you want to add to the database?: ")
-                d.add_player(n)
+                id = int(input("What ID number do you want to add to the database?: "))
+                name = input("What name do you want to add to the database?: ")
+                d.add_player(id, name)
             case "2":
                 n = input("What name do you want to remove?: ")
                 d.remove_player(n)
+            case "3":
+                print(d.get_players())
 
 
 
