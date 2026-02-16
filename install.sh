@@ -17,7 +17,7 @@ echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
 echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
 echo 'eval "$(pyenv init - bash)"' >> ~/.profile
 
-. ~/.bashrc
+source ~/.bashrc
 
 # Install Python 3.11.2
 pyenv install 3.11.2
@@ -30,10 +30,10 @@ sudo apt install python3-tk -y
 python -m venv .venv
 
 # Activate venv and install requirements
-. .venv/bin/activate
+source .venv/bin/activate
 pip install -r "requirements.txt"
 
 # Run App
-bash run.sh
+./run.sh
 
 exec bash -l

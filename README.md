@@ -25,5 +25,5 @@ cd CSCE35103-LaserTag
 
 Run the install script
 ```
-bash install.sh
+./install.sh
 ```

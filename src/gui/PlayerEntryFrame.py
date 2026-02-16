@@ -16,39 +16,55 @@ class PlayerEntryFrame(ttk.Frame):
         self.db = database
         self.socket = socket
 
+        self.network_addr = tk.StringVar()
+        self.network_addr.set(f"{self.game.addr_from}:{self.game.addr_from_port}")
+
         self.add_player_id = tk.StringVar()
         self.add_player_name = tk.StringVar()
         self.add_player_equip_id = tk.StringVar()
 
-        self.start_list_row = 7
+        self.start_list_row = 11
 
         self.entries = []
         self.player_labels = []
 
-        self.bind("<Key>", self.game_start)
+        self.bind("<Key>", self.key_listener)
         self.focus_set()
+
+        # Change Network
+        network_label = ttk.Label(self, text="Network Address")
+        network_label.grid(row=self.start_list_row - 11, column=0, pady=2, columnspan=4)
+
+        network_entry = ttk.Entry(self, textvariable=self.network_addr)
+        network_entry.grid(row=self.start_list_row - 10, column=0, pady=2, columnspan=4)
+
+        update_address_button = ttk.Button(self, text="Update Address", command=self.update_network)
+        update_address_button.grid(row=self.start_list_row - 9, column=0, pady=2, columnspan=4)
+
+        start_game_button = ttk.Button(self, text="Start Game!", command=self.start_game)
+        start_game_button.grid(row=self.start_list_row - 8, column=0, pady=8, columnspan=4)
 
         # Add Player
         add_player_label = ttk.Label(self, text="Add a Player:")
-        add_player_label.grid(row=0, column=0, pady=2, columnspan=4)
+        add_player_label.grid(row=self.start_list_row - 7, column=0, pady=2, columnspan=4)
 
         enter_id_entry = LabeledEntry(self, label="Enter ID:", textvariable=self.add_player_id)
-        enter_id_entry.grid(row=1, column=0, pady=2, columnspan=4)
+        enter_id_entry.grid(row=self.start_list_row - 6, column=0, pady=2, columnspan=4)
         self.entries.append(enter_id_entry)   
 
         enter_name_entry = LabeledEntry(self, label="Enter Name:", textvariable=self.add_player_name)
-        enter_name_entry.grid(row=2, column=0, pady=2, columnspan=4)
+        enter_name_entry.grid(row=self.start_list_row - 5, column=0, pady=2, columnspan=4)
         self.entries.append(enter_name_entry)
 
         enter_equipment_entry = LabeledEntry(self, label="Enter Equipment ID:", textvariable=self.add_player_equip_id)
-        enter_equipment_entry.grid(row=3, column=0, pady=2, columnspan=4)
+        enter_equipment_entry.grid(row=self.start_list_row - 4, column=0, pady=2, columnspan=4)
         self.entries.append(enter_equipment_entry)
 
         add_player_button = ttk.Button(self, text="Add Player", command=self.add_player)
-        add_player_button.grid(row=4, column=0, pady=2, columnspan=4)
+        add_player_button.grid(row=self.start_list_row - 3, column=0, pady=2, columnspan=4)
 
-        players_label = ttk.Label(self, text="Players")
-        players_label.grid(row=5, column=0, columnspan=4)
+        players_label = ttk.Label(self, text="Players - ID | Name | EquipmentID")
+        players_label.grid(row=self.start_list_row - 2, column=0, columnspan=4, pady=2)
 
         # Red Team - Left
         red_team_label = ttk.Label(self, text="Red Team")
@@ -134,7 +150,20 @@ class PlayerEntryFrame(ttk.Frame):
             green_index += 1
 
 
-    def game_start(self, event):
+    def update_network(self):
+        addr = self.network_addr.get().split(":")
+
+        self.game.addr_from = addr[0]
+        self.game.addr_from_port = int(addr[1])
+
+        self.game.send_to_location = (addr[0], int(addr[1]))
+
+
+    def key_listener(self, event):
         if event.keysym == "F5":
-            self.socket.sendto("202".encode(), self.game.send_to_location)
-            self.game.start_game()
+            self.start_game()
+
+
+    def start_game(self):
+        self.socket.sendto("202".encode(), self.game.send_to_location)
+        self.game.start_game()

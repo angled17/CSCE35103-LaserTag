@@ -23,7 +23,6 @@ class App(ttk.Window):
         # self.resizable(False, False)
 
         self.db = d
-        self.queue = Queue()
         self.game_started = False
 
         # UDP Config
@@ -32,19 +31,12 @@ class App(ttk.Window):
 
         self.send_to_location = (self.addr_from, self.addr_from_port)
 
-        self.server_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+        self.server_socket = None
         self.client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
-        self.server_socket.bind(("0.0.0.0", 7501))
-        network_message("UDP server is up and listening!")
-
         self.client_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.client_socket.bind((self.addr_from, 7500))
+        self.client_socket.bind(("127.0.0.1", 7500))
         network_message("UDP client is up!")
-
-        self.server_thread = UDPServerThread(self.server_socket, self.queue)
-        self.server_thread.start()
-        self.check_queue()
         
         # Game Information {id: equip_id}
         self.red_team = {}
@@ -58,24 +50,3 @@ class App(ttk.Window):
     def start_game(self):
         self.game_action_frame = GameActionFrame(self, self.db)
         self.player_entry_frame.destroy()
-
-
-    def check_queue(self):
-        try:
-            while True:
-                transmission_received = self.queue.get_nowait()
-                code = int(transmission_received[0])
-                addr_from = transmission_received[1][0]
-                port_from = transmission_received[1][1]
-
-                network_message(f"Code {code} from {addr_from}:{port_from}")
-
-                if code == 202:
-                    self.game_started = True
-                    network_message("Network Game Start!")
-
-                self.queue.task_done()
-        except Empty:
-            pass
-
-        self.after(5, self.check_queue)
