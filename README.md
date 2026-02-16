@@ -25,7 +25,13 @@ Change into the project directory
 cd CSCE35103-LaserTag
 ```
 
-Run the install script
+Run the install script. The game will run once installed
 ```
 bash install.sh
+```
+
+## How to Run!
+Run the run script!
+```
+./run.sh
 ```
