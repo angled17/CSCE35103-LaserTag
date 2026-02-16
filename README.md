@@ -1,2 +1,37 @@
-# CSCE35103-LaserTag
-Project for CSCE 35103.
+# CSCE35103 - Photon Laser Tag
+
+## Project Members:
+angled17 - Angel Duron
+
+## How to Install!
+Update APT Repositories.
+```
+sudo apt update
+```
+
+Install Git
+```
+sudo apt install git
+```
+
+
+Clone the repository.
+```
+git clone https://github.com/angled17/CSCE35103-LaserTag.git
+```
+
+Change into the project directory
+```
+cd CSCE35103-LaserTag
+```
+
+Run the install script. The game will run once installed
+```
+bash install.sh
+```
+
+## How to Run!
+Run the run script!
+```
+./run.sh
+```
