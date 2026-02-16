@@ -20,7 +20,7 @@ echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
 echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
 echo 'eval "$(pyenv init - bash)"' >> ~/.profile
 
-exec bash -l
+source ~/.profile
 
 # Install Python 3.11.2
 pyenv install 3.11.2
