@@ -5,23 +5,28 @@ from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs import Messagebox
 
 from gui.LabeledEntry import LabeledEntry
-from log.logger import general_message
+from log.logger import general_message, network_message
 
 
 class PlayerEntryFrame(ttk.Frame):
-    def __init__(self, container, database):
+    def __init__(self, container, database, socket):
         super().__init__(container)
 
         self.game = container
         self.db = database
+        self.socket = socket
+
         self.add_player_id = tk.StringVar()
         self.add_player_name = tk.StringVar()
         self.add_player_equip_id = tk.StringVar()
 
-        self.start_list_row = 6
+        self.start_list_row = 7
 
         self.entries = []
         self.player_labels = []
+
+        self.bind("<Key>", self.game_start)
+        self.focus_set()
 
         # Add Player
         add_player_label = ttk.Label(self, text="Add a Player:")
@@ -42,13 +47,16 @@ class PlayerEntryFrame(ttk.Frame):
         add_player_button = ttk.Button(self, text="Add Player", command=self.add_player)
         add_player_button.grid(row=4, column=0, pady=2, columnspan=4)
 
+        players_label = ttk.Label(self, text="Players")
+        players_label.grid(row=5, column=0, columnspan=4)
+
         # Red Team - Left
         red_team_label = ttk.Label(self, text="Red Team")
-        red_team_label.grid(row=5, column=0, padx=10, pady=10, columnspan=2)
+        red_team_label.grid(row=self.start_list_row - 1, column=0, padx=10, pady=10, columnspan=2)
 
         # Green Team - Right
         green_team_label = ttk.Label(self, text="Green Team")
-        green_team_label.grid(row=5, column=2, padx=10, pady=10, columnspan=2)
+        green_team_label.grid(row=self.start_list_row - 1, column=2, padx=10, pady=10, columnspan=2)
 
         self.pack()
 
@@ -82,6 +90,9 @@ class PlayerEntryFrame(ttk.Frame):
 
             return
 
+        self.socket.sendto(equip_id.encode(), self.game.send_to_location)
+        network_message(f"Broadcasted {equip_id} to {self.game.send_to_location[0]:{self.game.send_to_location[1]}}")
+
         id = int(id)
         equip_id = int(equip_id)
 
@@ -90,7 +101,6 @@ class PlayerEntryFrame(ttk.Frame):
                 self.game.red_team[id] = equip_id
             else:
                 self.game.green_team[id] = equip_id
-                # self.green_team_labels.append(ttk.Label(self, text=f"{id} | {name} | {equip_id}"))
             
             for entry in self.entries:
                 entry.on_update()
@@ -123,3 +133,8 @@ class PlayerEntryFrame(ttk.Frame):
 
             green_index += 1
 
+
+    def game_start(self, event):
+        if event.keysym == "F5":
+            self.socket.sendto("202".encode(), self.game.send_to_location)
+            self.game.start_game()

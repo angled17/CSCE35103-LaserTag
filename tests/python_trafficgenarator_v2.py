@@ -4,7 +4,6 @@ import time
 
 bufferSize  = 1024
 friendly_fire = 0
-serverAddressPort   = ("0.0.0.0", 7500)
 clientAddressPort   = ("127.0.0.1", 7501)
 
 
@@ -18,22 +17,7 @@ green1 = input('Enter equipment id of green player 1 ==> ')
 green2 = input('Enter equipment id of green player 2 ==> ')
 
 # Create datagram sockets
-UDPServerSocketReceive = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 UDPClientSocketTransmit = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-
-# bind server socket
-UDPServerSocketReceive.bind(serverAddressPort)
-
-# wait for start from game software
-print ("")
-print ("waiting for start from game_software")
-
-received_data = ' '
-while received_data != '202':
-	received_data, address = UDPServerSocketReceive.recvfrom(bufferSize)
-	received_data = received_data.decode('utf-8')
-	print ("Received from game software: " + received_data)
-print ('')
 
 # create events, random player and order
 counter = 0
@@ -84,9 +68,9 @@ while True:
 		print ("Received from game software: " + received_data)
 		print ('')
 		
-	counter = counter + 1;
+	counter = counter + 1
 	if received_data == '221':
-		break;
+		break
 	time.sleep(random.randint(1,3))
 	
 print("program complete")
