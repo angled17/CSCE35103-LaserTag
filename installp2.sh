@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ~/.bashrc
+
 # Install Python 3.11.2
 pyenv install 3.11.2
 pyenv shell 3.11.2
