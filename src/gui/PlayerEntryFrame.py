@@ -107,7 +107,7 @@ class PlayerEntryFrame(ttk.Frame):
             return
 
         self.socket.sendto(equip_id.encode(), self.game.send_to_location)
-        network_message(f"Broadcasted {equip_id} to {self.game.send_to_location[0]:{self.game.send_to_location[1]}}")
+        network_message(f"Broadcasted {equip_id} to {self.game.send_to_location[0]}:{self.game.send_to_location[1]}")
 
         id = int(id)
         equip_id = int(equip_id)
