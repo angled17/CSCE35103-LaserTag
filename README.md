@@ -1,5 +1,8 @@
 # CSCE35103 - Photon Laser Tag
 
+## Project Members:
+angled17 - Angel Duron
+
 ## How to Install!
 Update APT Repositories.
 ```
