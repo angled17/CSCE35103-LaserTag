@@ -15,7 +15,6 @@ sudo apt install git
 ```
 
 
-
 Clone the repository.
 ```
 git clone https://github.com/angled17/CSCE35103-LaserTag.git
@@ -28,5 +27,5 @@ cd CSCE35103-LaserTag
 
 Run the install script
 ```
-./install.sh
+bash install.sh
 ```
