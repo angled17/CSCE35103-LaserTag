@@ -6,12 +6,12 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from queue import Queue, Empty
 
-from gui.LabeledEntry import LabeledEntry
-from log.logger import general_message, network_message
-from networking.UDPServerThread import UDPServerThread
+from GUI.Scenes.LabeledScene import LabeledEntry
+from Logging.logger import general_message, network_message
+from Networking.UDPServerThread import UDPServerThread
 
 
-class GameActionFrame(ttk.Frame):
+class GameActionScene(ttk.Frame):
     def __init__(self, container, database):
         super().__init__(container)
 

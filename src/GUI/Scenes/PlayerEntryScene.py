@@ -4,11 +4,11 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from ttkbootstrap.dialogs import Messagebox
 
-from gui.LabeledEntry import LabeledEntry
-from log.logger import general_message, network_message
+from GUI.Scenes.LabeledScene import LabeledEntry
+from Logging.logger import general_message, network_message
 
 
-class PlayerEntryFrame(ttk.Frame):
+class PlayerEntryScene(ttk.Frame):
     def __init__(self, container, database, socket):
         super().__init__(container)
 

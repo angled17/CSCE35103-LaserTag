@@ -1,5 +1,5 @@
 import psycopg
-from log.logger import general_message
+from Logging.logger import general_message
 
 
 class Database:

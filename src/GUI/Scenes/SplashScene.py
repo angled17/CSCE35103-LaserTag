@@ -3,10 +3,10 @@ import ttkbootstrap as ttk
 
 from ttkbootstrap.constants import *
 from PIL import Image, ImageTk
-from gui.PlayerEntryFrame import PlayerEntryFrame
+from GUI.Scenes.PlayerEntryScene import PlayerEntryScene
 
 
-class SplashFrame(ttk.Frame):
+class SplashScene(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
         self.game = container
@@ -24,7 +24,7 @@ class SplashFrame(ttk.Frame):
 
     
     def move_to_player_entry(self):
-        self.game.player_entry_frame = PlayerEntryFrame(self.game, self.game.db, self.game.client_socket)
+        self.game.player_entry_frame = PlayerEntryScene(self.game, self.game.db, self.game.client_socket)
         self.destroy()
 
 

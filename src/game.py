@@ -5,13 +5,13 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from queue import Queue, Empty
 
-from gui.SplashFrame import SplashFrame
-from gui.PlayerEntryFrame import PlayerEntryFrame
-from gui.GameActionFrame import GameActionFrame
+from GUI.Scenes.SplashScene import SplashScene
+from GUI.Scenes.PlayerEntryScene import PlayerEntryScene
+from GUI.Scenes.GameActionScene import GameActionScene
 
-from log.logger import general_message, network_message
+from Logging.logger import general_message, network_message
 
-from networking.UDPServerThread import UDPServerThread
+from Networking.UDPServerThread import UDPServerThread
 
 class App(ttk.Window):
     def __init__(self, d):
@@ -42,11 +42,11 @@ class App(ttk.Window):
         self.red_team = {}
         self.green_team = {}
 
-        self.splash_screen_frame = SplashFrame(self)
+        self.splash_screen_frame = SplashScene(self)
         self.player_entry_frame = None
         self.game_action_frame = None
 
 
     def start_game(self):
-        self.game_action_frame = GameActionFrame(self, self.db)
+        self.game_action_frame = GameActionScene(self, self.db)
         self.player_entry_frame.destroy()
