@@ -6,7 +6,7 @@ import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 from queue import Queue, Empty
 
-from GUI.Scenes.LabeledScene import LabeledEntry
+from GUI.Custom.LabeledEntry import LabeledEntry
 from Logging.logger import general_message, network_message
 from Networking.UDPServerThread import UDPServerThread
 
@@ -30,7 +30,7 @@ class GameActionScene(ttk.Frame):
 
         ttk.Label(self, text="GameActionFrame").grid(row=0, column=0)
 
-        self.pack()
+        self.grid()
 
 
     def check_queue(self):

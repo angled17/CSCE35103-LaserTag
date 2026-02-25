@@ -20,6 +20,8 @@ class App(ttk.Window):
         # Root Window Config
         self.title("Laser Tag!")
         self.geometry('700x700')
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
         # self.resizable(False, False)
 
         self.db = d
@@ -35,7 +37,7 @@ class App(ttk.Window):
         self.client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
         self.client_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        self.client_socket.bind(("127.0.0.1", 7500))
+        # self.client_socket.bind(("127.0.0.1", 7500)) <- According to feedback from Sprint 2, do not bind client socket.
         network_message("UDP client is up!")
         
         # Game Information {id: equip_id}

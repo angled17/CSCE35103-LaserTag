@@ -10,15 +10,23 @@ class SplashScene(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
         self.game = container
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
         
-        self.splash_image = ImageTk.PhotoImage(Image.open('static/logo.jpg').resize((700, 700)), Image.Resampling.LANCZOS)
+        self.game.update_idletasks()
+
+        self.og_image = Image.open('static/logo.jpg')
+        self.splash_image = ImageTk.PhotoImage(self.og_image.resize((self.game.winfo_width(), self.game.winfo_height())), Image.Resampling.LANCZOS)
 
         # label
         self.img_label = ttk.Label(self, image=self.splash_image)
         self.img_label.grid()
 
         # show the frame on the container
-        self.pack()
+        self.grid(sticky="nsew")
+
+        self.bind("<Configure>", self.on_resize)
 
         self.after(3000, self.move_to_player_entry)
 
@@ -26,5 +34,12 @@ class SplashScene(ttk.Frame):
     def move_to_player_entry(self):
         self.game.player_entry_frame = PlayerEntryScene(self.game, self.game.db, self.game.client_socket)
         self.destroy()
+
+    def on_resize(self, event):
+        self.game.update_idletasks()
+
+        self.new_img = ImageTk.PhotoImage(self.og_image.resize((event.width, event.height)), Image.Resampling.LANCZOS)
+        self.img_label.configure(image=self.new_img)
+
 
 
