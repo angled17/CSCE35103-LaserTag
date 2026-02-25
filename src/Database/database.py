@@ -102,7 +102,7 @@ class Database:
         return players
     
 
-    def get_player_from_id(self, id: int) -> str:
+    def get_player_name_from_id(self, id: int) -> str:
         self.cur.execute("SELECT * FROM players")
         result = self.cur.fetchall()
 
@@ -114,43 +114,13 @@ class Database:
         return ""
     
 
+    def does_player_exist_from_id(self, id: int) -> bool:
+        players = self.get_players()
+
+        return id in players
+
+
     def get_error_message(self) -> str:
         return self.error_message
 
 
-def debug_database(d: Database):
-    running = True
-
-    while running:
-        print("--------------------")
-        print("What do you want to do?")
-        print("1. Add player to database.")
-        print("2. Remove player from database.")
-        print("3. Get All Players")
-        print("q. Quit")
-        print("> ", end="")
-
-        response = input()
-
-        match response.lower():
-            case "q":
-                running = False
-            case "1":
-                id = int(input("What ID number do you want to add to the database?: "))
-                name = input("What name do you want to add to the database?: ")
-                d.add_player(id, name)
-            case "2":
-                n = input("What name do you want to remove?: ")
-                d.remove_player(n)
-            case "3":
-                print(d.get_players())
-
-
-
-if __name__ == "__main__":
-    db = Database()
-    db.connect()
-
-    debug_database(db)
-
-    db.close()

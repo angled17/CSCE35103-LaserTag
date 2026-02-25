@@ -33,3 +33,6 @@ class NetworkConfigFrame(ttk.Frame):
         self.game.addr_from_port = int(addr[1])
 
         self.game.send_to_location = (addr[0], int(addr[1]))
+
+
+    

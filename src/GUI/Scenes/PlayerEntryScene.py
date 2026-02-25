@@ -42,42 +42,6 @@ class PlayerEntryScene(ttk.Frame):
 
         self.grid(row=0, column=0, sticky="n")
 
-    
-    
-
-    
-    def update_player_list(self):
-        # Destory Player Labels
-        for l in self.player_labels:
-            l.destroy()
-
-        # Update Red
-        red_index = self.start_list_row
-        green_index = self.start_list_row
-
-        for red_player_id in self.game.red_team:
-            t_lab = ttk.Label(self, text=f"{red_player_id} | {self.db.get_player_from_id(red_player_id)} | {self.game.red_team[red_player_id]}")
-            t_lab.grid(row=red_index, column=1, padx=5)
-            self.player_labels.append(t_lab)
-
-            red_index += 1
-
-        for green_player_id in self.game.green_team:
-            t_lab = ttk.Label(self, text=f"{green_player_id} | {self.db.get_player_from_id(green_player_id)} | {self.game.green_team[green_player_id]}")
-            t_lab.grid(row=green_index, column=3, padx=5)
-            self.player_labels.append(t_lab)
-
-            green_index += 1
-
-
-    def update_network(self):
-        addr = self.network_addr.get().split(":")
-
-        self.game.addr_from = addr[0]
-        self.game.addr_from_port = int(addr[1])
-
-        self.game.send_to_location = (addr[0], int(addr[1]))
-
 
     def key_listener(self, event):
         if event.keysym == "F5":
@@ -87,3 +51,12 @@ class PlayerEntryScene(ttk.Frame):
     def start_game(self):
         self.socket.sendto("202".encode(), self.game.send_to_location)
         self.game.start_game()
+
+    
+    def update_list(self):
+        self.player_list_frame.update_player_list()
+
+    
+    def broadcast(self, msg):
+        self.socket.sendto(msg.encode(), self.game.send_to_location)
+        network_message(f"Broadcasted {msg} to {self.game.send_to_location[0]}:{self.game.send_to_location[1]}")
