@@ -15,7 +15,7 @@ from Networking.UDPServerThread import UDPServerThread
 
 class App(ttk.Window):
     def __init__(self, d):
-        super().__init__(themename="darkly")
+        super().__init__(themename="vapor")
         
         # Root Window Config
         self.title("Laser Tag!")
