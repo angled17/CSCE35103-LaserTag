@@ -13,11 +13,13 @@ from Logging.logger import general_message, network_message
 
 class PlayerEntryScene(ttk.Frame):
     def __init__(self, container, database, socket):
-        super().__init__(container, relief="raised", borderwidth=5)
+        super().__init__(container)
 
         self.game = container
         self.db = database
         self.socket = socket
+
+        self.bind_all("<Button-1>", lambda event: event.widget.focus_set())
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -46,6 +48,9 @@ class PlayerEntryScene(ttk.Frame):
     def key_listener(self, event):
         if event.keysym == "F5":
             self.start_game()
+        elif event.keysym == "F12":
+            self.clear_players()
+                
 
 
     def start_game(self):
@@ -53,6 +58,12 @@ class PlayerEntryScene(ttk.Frame):
         self.game.start_game()
 
     
+    def clear_players(self):
+        self.game.red_team.clear()
+        self.game.green_team.clear()
+        self.update_list()
+
+
     def update_list(self):
         self.player_list_frame.update_player_list()
 

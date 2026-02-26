@@ -1,6 +1,7 @@
 import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.dialogs import Messagebox
+from ttkbootstrap.dialogs import Querybox
 
 from GUI.Custom.LabeledEntry import LabeledEntry
 from Logging.logger import general_message
@@ -8,13 +9,12 @@ from Logging.logger import general_message
 
 class AddPlayerFrame(ttk.Frame):
     def __init__(self, container, main_game):
-        super().__init__(container, relief="raised", borderwidth=2)
+        super().__init__(container, relief="solid", borderwidth=2)
 
         self.game = main_game
         self.scene = container
 
         self.add_player_id = tk.StringVar()
-        self.add_player_name = tk.StringVar()
         self.add_player_equip_id = tk.StringVar()
 
         # Add Player
@@ -66,11 +66,13 @@ class AddPlayerFrame(ttk.Frame):
         equip_id = int(equip_id)
 
         if not self.game.db.does_player_exist_from_id(id):
-            '''
-            This is supposed to request the user to enter a name in a new window.
-            '''
+            name = Querybox.get_string("Enter a name for the new player!")
+            print(name)
 
-            pass
+            if self.game.db.add_player(id, name):
+                pass
+            else:
+                Messagebox.ok(self.db.get_error_message(), "Error!")
 
 
         # Swapping Even/Odd Colors According to Feedback from Sprint 2
@@ -81,13 +83,11 @@ class AddPlayerFrame(ttk.Frame):
         
     
         self.scene.update_list()
-
-        
-        # if self.game.db.add_player(id, name):
-        #     pass
-        # else:
-        #     Messagebox.ok(self.db.get_error_message(), "Error!")
-
         
         # Network Broadcast
         self.scene.broadcast(str(equip_id))
+        
+        self.add_player_id.set("Enter ID:")
+        self.add_player_equip_id.set("Enter Equipment ID:")
+
+        self.scene.focus_set()
