@@ -1,5 +1,4 @@
 import socket
-import threading
 import tkinter as tk
 import ttkbootstrap as ttk
 
@@ -11,7 +10,7 @@ from Logging.logger import general_message, network_message
 from Networking.UDPServerThread import UDPServerThread
 
 
-class GameActionScene(ttk.Frame):
+class PlayActionScene(ttk.Frame):
     def __init__(self, container, database):
         super().__init__(container)
 
@@ -28,7 +27,7 @@ class GameActionScene(ttk.Frame):
             self.server_thread.start()
             self.check_queue()
 
-        ttk.Label(self, text="GameActionFrame").grid(row=0, column=0)
+        ttk.Label(self, text="PlayActionScene").grid(row=0, column=0)
 
         self.grid()
 

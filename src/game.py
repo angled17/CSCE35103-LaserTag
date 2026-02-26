@@ -7,7 +7,7 @@ from queue import Queue, Empty
 
 from GUI.Scenes.SplashScene import SplashScene
 from GUI.Scenes.PlayerEntryScene import PlayerEntryScene
-from GUI.Scenes.GameActionScene import GameActionScene
+from GUI.Scenes.PlayActionScene import PlayActionScene
 
 from Logging.logger import general_message, network_message
 
@@ -46,9 +46,9 @@ class App(ttk.Window):
 
         self.splash_screen_frame = SplashScene(self)
         self.player_entry_frame = None
-        self.game_action_frame = None
+        self.play_action_frame = None
 
 
     def start_game(self):
-        self.game_action_frame = GameActionScene(self, self.db)
+        self.play_action_frame = PlayActionScene(self, self.db)
         self.player_entry_frame.destroy()
