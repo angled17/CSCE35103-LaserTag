@@ -3,7 +3,6 @@ import tkinter as tk
 import ttkbootstrap as ttk
 
 from ttkbootstrap.constants import *
-from queue import Queue, Empty
 
 from GUI.Scenes.SplashScene import SplashScene
 from GUI.Scenes.PlayerEntryScene import PlayerEntryScene

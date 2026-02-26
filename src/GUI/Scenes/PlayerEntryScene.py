@@ -19,7 +19,7 @@ class PlayerEntryScene(ttk.Frame):
         self.db = database
         self.socket = socket
 
-        self.bind_all("<Button-1>", lambda event: event.widget.focus_set())
+        self.bind_all("<Button-1>", self.widget_focus)
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -45,13 +45,16 @@ class PlayerEntryScene(ttk.Frame):
         self.grid(row=0, column=0, sticky="n")
 
 
+    def widget_focus(self, event):
+        if not isinstance(event.widget, str):
+            event.widget.focus_set()
+
     def key_listener(self, event):
         if event.keysym == "F5":
             self.start_game()
         elif event.keysym == "F12":
             self.clear_players()
                 
-
 
     def start_game(self):
         self.socket.sendto("202".encode(), self.game.send_to_location)

@@ -65,17 +65,31 @@ class AddPlayerFrame(ttk.Frame):
         id = int(id)
         equip_id = int(equip_id)
 
+        # Check for max team size (n <= 15)
+        if equip_id % 2 == 1:
+            # Red Team
+            if len(self.game.red_team) >= 15:
+                general_message("Red Team is Full!")
+                Messagebox.ok("Red Team is Full!", "Error!")
+                return
+        else:
+            # Green Team
+            if len(self.game.green_team) >= 15:
+                general_message("Green Team is Full!")
+                Messagebox.ok("Green Team is Full!", "Error!")
+                return
+
+
+        # Checks if ID is in Database
         if not self.game.db.does_player_exist_from_id(id):
             name = Querybox.get_string("Enter a name for the new player!")
-            print(name)
 
-            if self.game.db.add_player(id, name):
-                pass
-            else:
+            if not self.game.db.add_player(id, name):
                 Messagebox.ok(self.db.get_error_message(), "Error!")
-
+                
 
         # Swapping Even/Odd Colors According to Feedback from Sprint 2
+        # Add player to respective team
         if equip_id % 2 == 1:
             self.game.red_team[id] = equip_id
         else:
