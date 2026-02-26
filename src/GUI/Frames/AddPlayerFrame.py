@@ -9,7 +9,7 @@ from Logging.logger import general_message
 
 class AddPlayerFrame(ttk.Frame):
     def __init__(self, container, main_game):
-        super().__init__(container, relief="solid", borderwidth=2)
+        super().__init__(container)
 
         self.game = main_game
         self.scene = container

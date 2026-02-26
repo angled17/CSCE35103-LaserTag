@@ -3,7 +3,7 @@ import ttkbootstrap as ttk
 
 class NetworkConfigFrame(ttk.Frame):
     def __init__(self, container, main_game):
-        super().__init__(container, relief="solid", borderwidth=2)
+        super().__init__(container)
 
         self.game = main_game
 
