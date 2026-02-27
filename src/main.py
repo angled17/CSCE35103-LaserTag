@@ -1,14 +1,26 @@
 from Database.database import Database
 from game import App
+from Logging.logger import debug_message
 
 import sys
+
+
+debug_splash_scene = False
+debug_player_entry_scene = False
+debug_play_action_scene = False
 
 
 def main():
     d = Database()
     d.connect()
 
-    app = App(d)
+    debug_flags = {
+        "SplashScene": debug_splash_scene,
+        "PlayerEntryScene": debug_player_entry_scene,
+        "PlayActionScene": debug_play_action_scene
+    }
+
+    app = App(d, debug_flags)
     app.mainloop()
 
     d.close()
@@ -52,5 +64,19 @@ if __name__ == "__main__":
         match sys.argv[1]:
             case "db":
                 debug_database()
+            case "debug":
+                match sys.argv[2]:
+                    case "SplashScene":
+                        debug_message("Debugging Splash Scene")
+                        debug_splash_scene = True
+                    case "PlayerEntryScene":
+                        debug_message("Debugging Player Entry Scene")
+                        debug_player_entry_scene = True
+                    case "PlayActionScene":
+                        debug_message("Debugging Play Action Scene")
+                        debug_play_action_scene = True
+                    case _:
+                        debug_message("Invalid Argument(s)! Running normally...")
+                main()
     else:
         main()

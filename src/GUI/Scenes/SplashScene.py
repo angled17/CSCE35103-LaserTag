@@ -28,7 +28,8 @@ class SplashScene(ttk.Frame):
 
         self.bind("<Configure>", self.on_resize)
 
-        self.after(3000, self.move_to_player_entry)
+        if not any(self.game.debug_flags.values()) or not list(self.game.debug_flags.values()) == [True, False, False]:
+            self.after(3000, self.move_to_player_entry)
 
     
     def move_to_player_entry(self):

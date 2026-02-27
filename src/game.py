@@ -8,12 +8,12 @@ from GUI.Scenes.SplashScene import SplashScene
 from GUI.Scenes.PlayerEntryScene import PlayerEntryScene
 from GUI.Scenes.PlayActionScene import PlayActionScene
 
-from Logging.logger import general_message, network_message
+from Logging.logger import network_message
 
 from Networking.UDPServerThread import UDPServerThread
 
 class App(ttk.Window):
-    def __init__(self, d):
+    def __init__(self, d, flags):
         super().__init__(themename="darkly")
         
         # Root Window Config
@@ -21,10 +21,11 @@ class App(ttk.Window):
         self.geometry('700x700')
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        # self.resizable(False, False)
 
         self.db = d
         self.game_started = False
+
+        self.debug_flags = flags
 
         # UDP Config
         self.addr_from = "127.0.0.1"
@@ -43,9 +44,19 @@ class App(ttk.Window):
         self.red_team = {}
         self.green_team = {}
 
-        self.splash_screen_frame = SplashScene(self)
+
+        self.splash_screen_frame = None
         self.player_entry_frame = None
         self.play_action_frame = None
+
+        if not any(self.debug_flags.values()) or list(self.debug_flags.values()) == [True, False, False]:
+            self.splash_screen_frame = SplashScene(self)
+
+        if list(self.debug_flags.values()) == [False, True, False]:
+            self.player_entry_frame = PlayerEntryScene(self, self.db, self.client_socket)
+
+        if list(self.debug_flags.values()) == [False, False, True]:
+            self.play_action_frame = PlayActionScene(self, self.db)
 
 
     def start_game(self):

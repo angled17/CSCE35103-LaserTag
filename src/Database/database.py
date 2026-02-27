@@ -1,5 +1,5 @@
 import psycopg
-from Logging.logger import general_message
+from Logging.logger import database_message
 
 
 class Database:
@@ -11,12 +11,12 @@ class Database:
     def connect(self):
         self.conn = psycopg.connect("dbname=photon user=student")
         self.cur = self.conn.cursor()
-        general_message("Connected to database successfully!")
+        database_message("Connected to database successfully!")
 
     def close(self):
         self.cur.close()
         self.conn.close()
-        general_message("Closed database successfully!")
+        database_message("Closed database successfully!")
 
     # Adds a player to the "players" table in the "photon" database
     # Returns True if the name was successfully added to the database
@@ -35,7 +35,7 @@ class Database:
         # Checks if name is in current names. Returns False if it is.
         if name in current_names:
             self.error_message = 'Name "{}" is already being used!'.format(name)
-            general_message(self.error_message)
+            database_message(self.error_message)
             return False
         
         self.cur.execute("SELECT id FROM players")
@@ -48,14 +48,14 @@ class Database:
         # Checks if id is in current ids. Returns False if it is.
         if id in current_ids:
             self.error_message = 'ID "{}" is already being used!'.format(id)
-            general_message(self.error_message)
+            database_message(self.error_message)
             return False
         
         
         # Insert into players
         self.cur.execute("INSERT INTO players (id, codename) VALUES (%s, %s)", (id, name))
         self.conn.commit()
-        general_message(f"Added ID: {id} | Player: {name} to the database!")
+        database_message(f"Added ID: {id} | Player: {name} to the database!")
         
         self.error_message = ""
         return True
@@ -74,7 +74,7 @@ class Database:
 
         if name not in current_names:
             self.error_message = f'"{name}" is not in the database!'
-            general_message(self.error_message)
+            database_message(self.error_message)
             return False
         
         self.cur.execute("DELETE FROM players WHERE codename = (%s) RETURNING id", (name,))
@@ -83,7 +83,7 @@ class Database:
         result = self.cur.fetchall()[0][0]
         self.conn.commit()
 
-        general_message(f"Removed ID: {result} | Player: {name} from the database!")
+        database_message(f"Removed ID: {result} | Player: {name} from the database!")
 
         self.error_message = ""
         return True

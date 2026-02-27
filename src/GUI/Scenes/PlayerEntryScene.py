@@ -3,12 +3,12 @@ import ttkbootstrap as ttk
 
 from ttkbootstrap.constants import *
 
-from GUI.Frames.NetworkConfigFrame import NetworkConfigFrame
-from GUI.Frames.AddPlayerFrame import AddPlayerFrame
-from GUI.Frames.PlayerListFrame import PlayerListFrame
+from GUI.Frames.PlayerEntry.NetworkConfigFrame import NetworkConfigFrame
+from GUI.Frames.PlayerEntry.AddPlayerFrame import AddPlayerFrame
+from GUI.Frames.PlayerEntry.PlayerListFrame import PlayerListFrame
 
 from GUI.Custom.LabeledEntry import LabeledEntry
-from Logging.logger import general_message, network_message
+from Logging.logger import network_message
 
 
 class PlayerEntryScene(ttk.Frame):

@@ -4,7 +4,7 @@ from ttkbootstrap.dialogs import Messagebox
 from ttkbootstrap.dialogs import Querybox
 
 from GUI.Custom.LabeledEntry import LabeledEntry
-from Logging.logger import general_message
+from Logging.logger import debug_message
 
 
 class AddPlayerFrame(ttk.Frame):
@@ -38,25 +38,25 @@ class AddPlayerFrame(ttk.Frame):
         name = ""
 
         if id == "Enter ID:":
-            general_message("Player ID field empty!")
+            debug_message("Player ID field empty!")
             Messagebox.ok("Please enter a player ID!", "Error!")
 
             return
         
         if equip_id == "Enter Equipment ID:":
-            general_message("Equipment ID field empty!")
+            debug_message("Equipment ID field empty!")
             Messagebox.ok("Please enter an equipment ID!", "Error!")
 
             return
         
         if not id.isdecimal():
-            general_message("ID is not a decimal")
+            debug_message("ID is not a decimal")
             Messagebox.ok("Please enter a number in ID box", "Error!")
 
             return
 
         if not equip_id.isdecimal():
-            general_message("Equipment ID is not a decimal")
+            debug_message("Equipment ID is not a decimal")
             Messagebox.ok("Please enter a number in Equipment ID box", "Error!")
 
             return
@@ -69,13 +69,13 @@ class AddPlayerFrame(ttk.Frame):
         if equip_id % 2 == 1:
             # Red Team
             if len(self.game.red_team) >= 15:
-                general_message("Red Team is Full!")
+                debug_message("Red Team is Full!")
                 Messagebox.ok("Red Team is Full!", "Error!")
                 return
         else:
             # Green Team
             if len(self.game.green_team) >= 15:
-                general_message("Green Team is Full!")
+                debug_message("Green Team is Full!")
                 Messagebox.ok("Green Team is Full!", "Error!")
                 return
 
