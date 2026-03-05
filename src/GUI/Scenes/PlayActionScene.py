@@ -35,7 +35,7 @@ class PlayActionScene(ttk.Frame):
         self.grid_rowconfigure(1, weight=2)
         self.grid_rowconfigure(2, weight=1)
 
-        self.grid_columnconfigure(0, weight=1)
+        # self.grid_columnconfigure(0, weight=1)
 
         self.players_frame = PlayersFrame(self, self.game)
         self.players_frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)

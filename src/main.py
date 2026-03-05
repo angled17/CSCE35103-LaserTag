@@ -5,6 +5,7 @@ from Logging.logger import debug_message
 import sys
 
 
+debug = False
 debug_splash_scene = False
 debug_player_entry_scene = False
 debug_play_action_scene = False
@@ -15,6 +16,7 @@ def main():
     d.connect()
 
     debug_flags = {
+        "Debug": debug,
         "SplashScene": debug_splash_scene,
         "PlayerEntryScene": debug_player_entry_scene,
         "PlayActionScene": debug_play_action_scene
@@ -65,6 +67,8 @@ if __name__ == "__main__":
             case "db":
                 debug_database()
             case "debug":
+                debug = True
+
                 match sys.argv[2]:
                     case "SplashScene":
                         debug_message("Debugging Splash Scene")

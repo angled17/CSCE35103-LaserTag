@@ -49,13 +49,13 @@ class App(ttk.Window):
         self.player_entry_frame = None
         self.play_action_frame = None
 
-        if not any(self.debug_flags.values()) or list(self.debug_flags.values()) == [True, False, False]:
+        if not any(self.debug_flags.values()) or list(self.debug_flags.values()) == [True, True, False, False]:
             self.splash_screen_frame = SplashScene(self)
 
-        if list(self.debug_flags.values()) == [False, True, False]:
+        if list(self.debug_flags.values()) == [True, False, True, False]:
             self.player_entry_frame = PlayerEntryScene(self, self.db, self.client_socket)
 
-        if list(self.debug_flags.values()) == [False, False, True]:
+        if list(self.debug_flags.values()) == [True, False, False, True]:
             self.play_action_frame = PlayActionScene(self, self.db)
 
 
