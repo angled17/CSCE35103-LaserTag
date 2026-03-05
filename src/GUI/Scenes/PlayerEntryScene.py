@@ -19,6 +19,8 @@ class PlayerEntryScene(ttk.Frame):
         self.db = database
         self.socket = socket
 
+        self.counter = 5
+
         self.bind_all("<Button-1>", self.widget_focus)
 
         self.grid_rowconfigure(0, weight=1)
@@ -33,7 +35,7 @@ class PlayerEntryScene(ttk.Frame):
         self.add_player_frame = AddPlayerFrame(self, self.game)
         self.add_player_frame.grid(row=0, column=2, rowspan=2, columnspan=3, padx=10, pady=5)
 
-        self.start_game_button = ttk.Button(self, text="Start Game!", command=self.start_game)
+        self.start_game_button = ttk.Button(self, text="Start Game!", command=self.start_countdown)
         self.start_game_button.grid(row=2, column=0, columnspan=5, pady=10)
 
         self.player_list_frame = PlayerListFrame(self, self.game)
@@ -55,6 +57,14 @@ class PlayerEntryScene(ttk.Frame):
         elif event.keysym == "F12":
             self.clear_players()
                 
+
+    def start_countdown(self):
+        if self.counter > 0:
+            self.start_game_button.config(text=f"Starting in {self.counter}...")
+            self.counter -= 1
+            self.after(1000, self.start_countdown)
+        else:
+            self.start_game()
 
     def start_game(self):
         self.socket.sendto("202".encode(), self.game.send_to_location)
