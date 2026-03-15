@@ -1,0 +1,15 @@
+import tkinter as tk
+import ttkbootstrap as ttk
+
+
+class ActionsFrame(ttk.Frame):
+    def __init__(self, container, main_game):
+        super().__init__(container, relief="raised", borderwidth=2)
+
+        self.game = main_game
+        self.scene = container
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
+        ttk.Label(self, text="ActionsFrame", relief="raised", borderwidth=2, anchor="center").grid(row=0, column=0, sticky="nsew")
