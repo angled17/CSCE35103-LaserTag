@@ -62,7 +62,7 @@ class Database:
     
 
     # Removes a player from the "players" table in the "photon" database
-    def remove_player(self, name: str) -> bool:
+    def remove_player_from_name(self, name: str) -> bool:
         current_names = []
 
         self.cur.execute("SELECT codename FROM players")
@@ -88,6 +88,34 @@ class Database:
         self.error_message = ""
         return True
     
+
+    def remove_player_from_id(self, id: int) -> bool:
+        current_ids = []
+
+        self.cur.execute("SELECT id FROM players")
+        result = self.cur.fetchall()
+
+        # Adds the ids to the list
+        for entry in result:
+            current_ids.append(entry[0])
+
+        if id not in current_ids:
+            self.error_message = f'"{id}" is not in the database!'
+            database_message(self.error_message)
+            return False
+        
+        self.cur.execute("DELETE FROM players WHERE id = (%s) RETURNING codename", (id, ))
+
+        # Stores Name of removed player
+        result = self.cur.fetchall()[0][0]
+        self.conn.commit()
+
+        database_message(f"Removed ID: {id} | Player: {result} from the database!")
+
+        self.error_message = ""
+        return True
+
+
     # Returns List [(id: int, codename: str), ...]
     def get_players(self) -> dict:
         players = {}

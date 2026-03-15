@@ -19,7 +19,10 @@ class PlayerEntryScene(ttk.Frame):
         self.db = database
         self.socket = socket
 
-        self.counter = 5
+        self.counter = 30
+
+        if self.game.debug_flags["Debug"]:
+            self.counter = 1
 
         self.bind_all("<Button-1>", self.widget_focus)
 

@@ -16,11 +16,8 @@ class SplashScene(ttk.Frame):
         
         self.game.update_idletasks()
 
-        self.og_image = Image.open('static/logo.jpg')
-        self.splash_image = ImageTk.PhotoImage(self.og_image.resize((self.game.winfo_width(), self.game.winfo_height())), Image.Resampling.LANCZOS)
-
         # label
-        self.img_label = ttk.Label(self, image=self.splash_image)
+        self.img_label = ttk.Label(self, image=self.game.splash_image)
         self.img_label.grid()
 
         # show the frame on the container
@@ -29,7 +26,12 @@ class SplashScene(ttk.Frame):
         self.bind("<Configure>", self.on_resize)
 
         if not any(self.game.debug_flags.values()) or not list(self.game.debug_flags.values()) == [True, False, False]:
-            self.after(3000, self.move_to_player_entry)
+            time_after = 3000
+
+            if self.game.debug_flags["Debug"]:
+                time_after = 500
+
+            self.after(time_after, self.move_to_player_entry)
 
     
     def move_to_player_entry(self):
@@ -39,8 +41,8 @@ class SplashScene(ttk.Frame):
     def on_resize(self, event):
         self.game.update_idletasks()
 
-        self.new_img = ImageTk.PhotoImage(self.og_image.resize((event.width, event.height)), Image.Resampling.LANCZOS)
-        self.img_label.configure(image=self.new_img)
+        self.game.splash_image = ImageTk.PhotoImage(self.game.logo_image.resize((event.width, event.height)), Image.Resampling.LANCZOS)
+        self.img_label.configure(image=self.game.splash_image)
 
 
 
