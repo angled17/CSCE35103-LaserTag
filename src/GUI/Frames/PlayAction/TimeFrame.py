@@ -12,4 +12,4 @@ class TimeFrame(ttk.Frame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        ttk.Label(self, text="TimeFrame", relief="raised", borderwidth=2).grid(row=0, column=0, sticky="nsew")
+        ttk.Label(self, text="TimeFrame", relief="raised", borderwidth=2, anchor="center").grid(row=0, column=0, sticky="nsew")

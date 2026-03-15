@@ -52,6 +52,8 @@ class App(ttk.Window):
         self.red_team = {}
         self.green_team = {}
 
+        self.points = {}
+
 
         self.splash_screen_frame = None
         self.player_entry_frame = None

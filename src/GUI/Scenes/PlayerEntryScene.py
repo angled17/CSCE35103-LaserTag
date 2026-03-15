@@ -38,7 +38,7 @@ class PlayerEntryScene(ttk.Frame):
         self.add_player_frame = AddPlayerFrame(self, self.game)
         self.add_player_frame.grid(row=0, column=2, rowspan=2, columnspan=3, padx=10, pady=5)
 
-        self.start_game_button = ttk.Button(self, text="Start Game!", command=self.start_countdown)
+        self.start_game_button = ttk.Button(self, text="Start Game! (F5)", command=self.start_countdown)
         self.start_game_button.grid(row=2, column=0, columnspan=5, pady=10)
 
         self.player_list_frame = PlayerListFrame(self, self.game)
@@ -56,7 +56,7 @@ class PlayerEntryScene(ttk.Frame):
 
     def key_listener(self, event):
         if event.keysym == "F5":
-            self.start_game()
+            self.start_countdown()
         elif event.keysym == "F12":
             self.clear_players()
                 
@@ -70,6 +70,19 @@ class PlayerEntryScene(ttk.Frame):
             self.start_game()
 
     def start_game(self):
+        # Initialize self.game.points
+        players = []
+        for player_id in self.game.red_team:
+            players.append(player_id)
+
+        for player_id in self.game.green_team:
+            players.append(player_id)
+
+        players.sort()
+
+        for player_id in players:
+            self.game.points[player_id] = 0
+
         self.socket.sendto("202".encode(), self.game.send_to_location)
         self.game.start_game()
 
