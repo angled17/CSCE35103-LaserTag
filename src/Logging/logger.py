@@ -12,3 +12,6 @@ def network_message(message: str):
 
 def music_message(message: str):
     print("[^]", message)
+
+def game_message(message: str):
+    print("[%]", message)

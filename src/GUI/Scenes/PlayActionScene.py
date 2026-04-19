@@ -10,7 +10,7 @@ from GUI.Frames.PlayAction.ActionsFrame import ActionsFrame
 from GUI.Frames.PlayAction.TimeFrame import TimeFrame
 
 from GUI.Custom.LabeledEntry import LabeledEntry
-from Logging.logger import network_message
+from Logging.logger import network_message, game_message
 from Networking.UDPServerThread import UDPServerThread
 
 
@@ -25,11 +25,12 @@ class PlayActionScene(ttk.Frame):
 
         # if self.game.addr_from == "127.0.0.1":
         self.game.server_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-        self.game.server_socket.bind(("0.0.0.0", 7501))
+        self.game.server_socket.bind(("127.0.0.1", 7501))
         network_message("UDP server is up and listening!")
 
         self.server_thread = UDPServerThread(self.game.server_socket, self.queue)
         self.server_thread.start()
+        self.game.client_socket.sendto("202".encode(), self.game.send_to_location)
         self.check_queue()
 
         self.grid_rowconfigure(0, weight=2)
@@ -54,18 +55,29 @@ class PlayActionScene(ttk.Frame):
         try:
             while True:
                 transmission_received = self.queue.get_nowait()
-                code = int(transmission_received[0])
+                code = transmission_received[0]
                 addr_from = transmission_received[1][0]
                 port_from = transmission_received[1][1]
 
                 network_message(f"Code {code} from {addr_from}:{port_from}")
 
-                if code == 202:
-                    self.game_started = True
-                    network_message("Network Game Start!")
+                self.handle_event(code)
 
                 self.queue.task_done()
         except Empty:
             pass
 
         self.after(5, self.check_queue)
+
+    
+    def handle_event(self, code):
+        if ":" in code:
+            player_transmitting = code.split(":")[0]
+            player_hit = code.split(":")[1]
+
+            game_message(f"{self.db.get_player_name_from_id(int(player_transmitting))} hit {self.db.get_player_name_from_id(int(player_hit))}!")
+
+            if int(player_transmitting) % 2 == int(player_hit) % 2:
+                self.game.broadcast(player_transmitting)
+
+            self.game.broadcast(player_hit)

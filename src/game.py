@@ -56,12 +56,12 @@ class App(ttk.Window):
         self.debug_flags = flags
 
         # UDP Config
-        self.addr_from = "127.0.0.1"
+        self.addr_to = "0.0.0.0"
 
         # From feedback of Sprint 3
-        self.addr_from_port = 7500
+        self.addr_to_port = 7500
 
-        self.send_to_location = (self.addr_from, self.addr_from_port)
+        self.send_to_location = (self.addr_to, self.addr_to_port)
 
         self.server_socket = None
         self.client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -94,7 +94,15 @@ class App(ttk.Window):
         if list_of_flags == [True, False, False, True]:
             self.play_action_frame = PlayActionScene(self, self.db)
 
+        if list_of_flags == [True, False, False, False]:
+            self.red_team = {1: 1, 3: 3}
+            self.green_team = {2: 2, 4: 4}
+
 
     def start_game(self):
         self.play_action_frame = PlayActionScene(self, self.db)
         self.player_entry_frame.destroy()
+
+    def broadcast(self, msg):
+        self.client_socket.sendto(msg.encode(), self.send_to_location)
+        network_message(f"Broadcasted {msg} to {self.send_to_location[0]}:{self.send_to_location[1]}")

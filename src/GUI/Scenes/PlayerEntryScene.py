@@ -51,6 +51,9 @@ class PlayerEntryScene(ttk.Frame):
 
         self.grid(row=0, column=0, sticky="n")
 
+        if self.game.debug_flags["Debug"]:
+            self.update_list()
+
 
     def widget_focus(self, event):
         if not isinstance(event.widget, str):
@@ -116,7 +119,7 @@ class PlayerEntryScene(ttk.Frame):
         for player_id in players:
             self.game.points[player_id] = 0
 
-        self.socket.sendto("202".encode(), self.game.send_to_location)
+        # self.socket.sendto("202".encode(), self.game.send_to_location)
         self.game.start_game()
 
     
@@ -129,7 +132,3 @@ class PlayerEntryScene(ttk.Frame):
     def update_list(self):
         self.player_list_frame.update_player_list()
 
-    
-    def broadcast(self, msg):
-        self.socket.sendto(msg.encode(), self.game.send_to_location)
-        network_message(f"Broadcasted {msg} to {self.game.send_to_location[0]}:{self.game.send_to_location[1]}")
