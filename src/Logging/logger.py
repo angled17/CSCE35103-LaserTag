@@ -8,3 +8,7 @@ def debug_message(message: str):
 
 def network_message(message: str):
     print("[$]", message)
+
+
+def music_message(message: str):
+    print("[^]", message)

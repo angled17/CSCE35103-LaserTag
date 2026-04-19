@@ -4,12 +4,13 @@ import ttkbootstrap as ttk
 
 from ttkbootstrap.constants import *
 from PIL import Image, ImageTk
+from pygame import mixer
 
 from GUI.Scenes.SplashScene import SplashScene
 from GUI.Scenes.PlayerEntryScene import PlayerEntryScene
 from GUI.Scenes.PlayActionScene import PlayActionScene
 
-from Logging.logger import network_message
+from Logging.logger import network_message, music_message
 
 from Networking.UDPServerThread import UDPServerThread
 
@@ -18,6 +19,26 @@ class App(ttk.Window):
     def __init__(self, d, flags):
         # Images
         self.logo_image = Image.open('static/logo.jpg')
+
+        mixer.init(channels=2)
+
+        self.sfx_channel = mixer.Channel(0)
+        self.music_channel = mixer.Channel(1)
+
+        self.music_track_sounds = {
+            "Track01": mixer.Sound("static/tracks/Track01.ogg"),
+            "Track02": mixer.Sound("static/tracks/Track02.ogg"),
+            "Track03": mixer.Sound("static/tracks/Track03.ogg"),
+            "Track04": mixer.Sound("static/tracks/Track04.ogg"),
+            "Track05": mixer.Sound("static/tracks/Track05.ogg"),
+            "Track06": mixer.Sound("static/tracks/Track06.ogg"),
+            "Track07": mixer.Sound("static/tracks/Track07.ogg"),
+            "Track08": mixer.Sound("static/tracks/Track08.ogg")
+        }
+
+        music_message("Tracks Loaded!")
+
+        self.music_delay = 9
 
         super().__init__(themename="darkly")
         
@@ -36,7 +57,9 @@ class App(ttk.Window):
 
         # UDP Config
         self.addr_from = "127.0.0.1"
-        self.addr_from_port = 7501
+
+        # From feedback of Sprint 3
+        self.addr_from_port = 7500
 
         self.send_to_location = (self.addr_from, self.addr_from_port)
 
