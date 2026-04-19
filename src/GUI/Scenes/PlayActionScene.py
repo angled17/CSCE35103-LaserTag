@@ -76,14 +76,18 @@ class PlayActionScene(ttk.Frame):
             player_transmitting = int(code.split(":")[0])
             player_hit = int(code.split(":")[1])
 
+            message = ""
             if player_hit not in [43, 53]:
-                game_message(f"{self.db.get_player_name_from_id(int(player_transmitting))} hit {self.db.get_player_name_from_id(int(player_hit))}!")
+                message = f"{self.db.get_player_name_from_id(int(player_transmitting))} hit {self.db.get_player_name_from_id(int(player_hit))}!"
             else:
                 if player_hit == 43:
-                    game_message(f"{self.db.get_player_name_from_id(int(player_transmitting))} hit Green Base!")
+                    message = f"{self.db.get_player_name_from_id(int(player_transmitting))} hit Green Base!"
                 if player_hit == 53:
-                    game_message(f"{self.db.get_player_name_from_id(int(player_transmitting))} hit Red Base!")
+                    message = f"{self.db.get_player_name_from_id(int(player_transmitting))} hit Red Base!"
 
+            game_message(message)
+            self.actions_frame.add_event(message)
+            self.actions_frame.update_scroll_frame()
 
             # Handle Red Base Scored
             if player_transmitting % 2 == 0 and player_hit == 53:
@@ -97,15 +101,27 @@ class PlayActionScene(ttk.Frame):
 
             # Handle Friendly Fire
             if player_transmitting % 2 == player_hit % 2:
-                self.game.broadcast(player_transmitting)
                 if player_hit not in [43, 53]:
-                    self.game.points[player_transmitting] -= 10
-                    self.game.points[player_hit] -= 10
+                    self.game.broadcast(player_transmitting)
+                    if self.game.points[player_transmitting] - 10 >= 0:
+                        self.game.points[player_transmitting] -= 10
+                    
+                    if self.game.points[player_hit] - 10 >= 0:
+                        self.game.points[player_hit] -= 10
+
+                    # self.game.points[player_transmitting] -= 10
+                    # self.game.points[player_hit] -= 10
+
+
             else:
             # Handle Hit    
                 if player_hit not in [43, 53]:
                     self.game.points[player_transmitting] += 10
-                    self.game.points[player_hit] -= 10
+                    
+                    if self.game.points[player_hit] - 10 >= 0:
+                        self.game.points[player_hit] -= 10
+
+                    # self.game.points[player_hit] -= 10
 
 
             self.game.broadcast(player_hit)
