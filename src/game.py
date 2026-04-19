@@ -76,7 +76,7 @@ class App(ttk.Window):
         self.green_team = {}
 
         self.points = {}
-
+        self.base = {}
 
         self.splash_screen_frame = None
         self.player_entry_frame = None
@@ -104,5 +104,6 @@ class App(ttk.Window):
         self.player_entry_frame.destroy()
 
     def broadcast(self, msg):
+        msg = str(msg)
         self.client_socket.sendto(msg.encode(), self.send_to_location)
         network_message(f"Broadcasted {msg} to {self.send_to_location[0]}:{self.send_to_location[1]}")

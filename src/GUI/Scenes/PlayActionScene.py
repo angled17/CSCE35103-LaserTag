@@ -31,7 +31,6 @@ class PlayActionScene(ttk.Frame):
         self.server_thread = UDPServerThread(self.game.server_socket, self.queue)
         self.server_thread.start()
         self.game.client_socket.sendto("202".encode(), self.game.send_to_location)
-        self.check_queue()
 
         self.grid_rowconfigure(0, weight=2)
         self.grid_rowconfigure(1, weight=2)
@@ -49,6 +48,8 @@ class PlayActionScene(ttk.Frame):
         self.time_frame.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)
 
         self.grid(row=0, column=0, sticky="n")
+
+        self.check_queue()
 
 
     def check_queue(self):
@@ -72,12 +73,42 @@ class PlayActionScene(ttk.Frame):
     
     def handle_event(self, code):
         if ":" in code:
-            player_transmitting = code.split(":")[0]
-            player_hit = code.split(":")[1]
+            player_transmitting = int(code.split(":")[0])
+            player_hit = int(code.split(":")[1])
 
-            game_message(f"{self.db.get_player_name_from_id(int(player_transmitting))} hit {self.db.get_player_name_from_id(int(player_hit))}!")
+            if player_hit not in [43, 53]:
+                game_message(f"{self.db.get_player_name_from_id(int(player_transmitting))} hit {self.db.get_player_name_from_id(int(player_hit))}!")
+            else:
+                if player_hit == 43:
+                    game_message(f"{self.db.get_player_name_from_id(int(player_transmitting))} hit Green Base!")
+                if player_hit == 53:
+                    game_message(f"{self.db.get_player_name_from_id(int(player_transmitting))} hit Red Base!")
 
-            if int(player_transmitting) % 2 == int(player_hit) % 2:
+
+            # Handle Red Base Scored
+            if player_transmitting % 2 == 0 and player_hit == 53:
+                self.game.points[player_transmitting] += 100
+                self.game.base[player_transmitting] = True
+
+            # Handle Green Base Scored
+            if player_transmitting % 2 == 1 and player_hit == 43:
+                self.game.points[player_transmitting] += 100
+                self.game.base[player_transmitting] = True
+
+            # Handle Friendly Fire
+            if player_transmitting % 2 == player_hit % 2:
                 self.game.broadcast(player_transmitting)
+                if player_hit not in [43, 53]:
+                    self.game.points[player_transmitting] -= 10
+                    self.game.points[player_hit] -= 10
+            else:
+            # Handle Hit    
+                if player_hit not in [43, 53]:
+                    self.game.points[player_transmitting] += 10
+                    self.game.points[player_hit] -= 10
+
 
             self.game.broadcast(player_hit)
+
+            
+            self.players_frame.update_player_list()

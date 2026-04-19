@@ -94,7 +94,9 @@ class AddPlayerFrame(ttk.Frame):
             self.game.red_team[id] = equip_id
         else:
             self.game.green_team[id] = equip_id
-        
+
+        self.game.points[id] = 0      
+        self.game.base[id] = False  
     
         self.scene.update_list()
         
