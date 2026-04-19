@@ -76,20 +76,22 @@ class PlayersFrame(ttk.Frame):
     
 
         for red_player_id in red_team_ids:
-            t_lab = ttk.Label(self, text=f"{self.game.db.get_player_name_from_id(red_player_id)}: {self.game.points[red_player_id]}")
-            # t_lab.bind("<Enter>", self.on_label_enter)
-            # t_lab.bind("<Leave>", self.on_label_exit)
-            # t_lab.bind("<Button-1>", self.on_label_click)
+            if self.game.base[red_player_id]:
+                t_lab = ttk.Label(self, text=f"{self.game.db.get_player_name_from_id(red_player_id)}: {self.game.points[red_player_id]}", image=self.game.base_icon, compound=tk.LEFT)
+            else:
+                t_lab = ttk.Label(self, text=f"{self.game.db.get_player_name_from_id(red_player_id)}: {self.game.points[red_player_id]}")
+
             t_lab.grid(row=red_index, column=0, padx=10)
             self.player_labels.append(t_lab)
 
             red_index += 1
 
         for green_player_id in green_team_ids:
-            t_lab = ttk.Label(self, text=f"{self.game.db.get_player_name_from_id(green_player_id)}: {self.game.points[green_player_id]}")
-            # t_lab.bind("<Enter>", self.on_label_enter)
-            # t_lab.bind("<Leave>", self.on_label_exit)
-            # t_lab.bind("<Button-1>", self.on_label_click)
+            if self.game.base[green_player_id]:
+                t_lab = ttk.Label(self, text=f"{self.game.db.get_player_name_from_id(green_player_id)}: {self.game.points[green_player_id]}", image=self.game.base_icon, compound=tk.LEFT)
+            else:    
+                t_lab = ttk.Label(self, text=f"{self.game.db.get_player_name_from_id(green_player_id)}: {self.game.points[green_player_id]}")
+
             t_lab.grid(row=green_index, column=2, padx=10)
             self.player_labels.append(t_lab)
 

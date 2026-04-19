@@ -19,6 +19,7 @@ class App(ttk.Window):
     def __init__(self, d, flags):
         # Images
         self.logo_image = Image.open('static/logo.jpg')
+        self.base_icon_image = Image.open('static/baseicon.jpg')
 
         mixer.init(channels=2)
 
@@ -43,6 +44,7 @@ class App(ttk.Window):
         super().__init__(themename="darkly")
         
         self.splash_image = ImageTk.PhotoImage(self.logo_image.resize((self.winfo_width(), self.winfo_height())), Image.Resampling.LANCZOS)
+        self.base_icon = ImageTk.PhotoImage(self.base_icon_image.resize((20, 20)), Image.Resampling.LANCZOS)
         
         # Root Window Config
         self.title("Laser Tag!")
@@ -97,6 +99,8 @@ class App(ttk.Window):
         if list_of_flags == [True, False, False, False]:
             self.red_team = {1: 1, 3: 3}
             self.green_team = {2: 2, 4: 4}
+            self.points = {1: 0, 2: 0, 3: 0, 4: 0}
+            self.base = {1: False, 2: False, 3: False, 4: False}
 
 
     def start_game(self):
