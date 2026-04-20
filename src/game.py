@@ -58,7 +58,7 @@ class App(ttk.Window):
         self.debug_flags = flags
 
         # UDP Config
-        self.addr_to = "0.0.0.0"
+        self.addr_to = "127.0.0.1"
 
         # From feedback of Sprint 3
         self.addr_to_port = 7500

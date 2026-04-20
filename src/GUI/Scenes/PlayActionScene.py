@@ -26,7 +26,7 @@ class PlayActionScene(ttk.Frame):
 
         # if self.game.addr_from == "127.0.0.1":
         self.game.server_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-        self.game.server_socket.bind(("127.0.0.1", 7501))
+        self.game.server_socket.bind(("0.0.0.0", 7501))
         network_message("UDP server is up and listening!")
 
         self.server_thread = UDPServerThread(self.game.server_socket, self.queue)

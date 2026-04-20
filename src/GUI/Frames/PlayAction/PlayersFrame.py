@@ -106,8 +106,8 @@ class PlayersFrame(ttk.Frame):
             self.red_winning = False
             self.green_winning = True
         else:
-            self.red_winning = True
-            self.green_winning = True
+            self.red_winning = False
+            self.green_winning = False
 
 
 
