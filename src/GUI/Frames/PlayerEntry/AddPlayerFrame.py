@@ -94,12 +94,14 @@ class AddPlayerFrame(ttk.Frame):
             self.game.red_team[id] = equip_id
         else:
             self.game.green_team[id] = equip_id
-        
+
+        self.game.points[id] = 0      
+        self.game.base[id] = False  
     
         self.scene.update_list()
         
         # Network Broadcast
-        self.scene.broadcast(str(equip_id))
+        self.game.broadcast(str(equip_id))
         
         self.add_player_id.set("Enter ID:")
         self.add_player_equip_id.set("Enter Equipment ID:")

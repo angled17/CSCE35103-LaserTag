@@ -4,12 +4,13 @@ import ttkbootstrap as ttk
 
 from ttkbootstrap.constants import *
 from PIL import Image, ImageTk
+from pygame import mixer
 
 from GUI.Scenes.SplashScene import SplashScene
 from GUI.Scenes.PlayerEntryScene import PlayerEntryScene
 from GUI.Scenes.PlayActionScene import PlayActionScene
 
-from Logging.logger import network_message
+from Logging.logger import network_message, music_message
 
 from Networking.UDPServerThread import UDPServerThread
 
@@ -18,10 +19,32 @@ class App(ttk.Window):
     def __init__(self, d, flags):
         # Images
         self.logo_image = Image.open('static/logo.jpg')
+        self.base_icon_image = Image.open('static/baseicon.jpg')
+
+        mixer.init(channels=2)
+
+        self.sfx_channel = mixer.Channel(0)
+        self.music_channel = mixer.Channel(1)
+
+        self.music_track_sounds = {
+            "Track01": mixer.Sound("static/tracks/Track01.ogg"),
+            "Track02": mixer.Sound("static/tracks/Track02.ogg"),
+            "Track03": mixer.Sound("static/tracks/Track03.ogg"),
+            "Track04": mixer.Sound("static/tracks/Track04.ogg"),
+            "Track05": mixer.Sound("static/tracks/Track05.ogg"),
+            "Track06": mixer.Sound("static/tracks/Track06.ogg"),
+            "Track07": mixer.Sound("static/tracks/Track07.ogg"),
+            "Track08": mixer.Sound("static/tracks/Track08.ogg")
+        }
+
+        music_message("Tracks Loaded!")
+
+        self.music_delay = 9
 
         super().__init__(themename="darkly")
         
         self.splash_image = ImageTk.PhotoImage(self.logo_image.resize((self.winfo_width(), self.winfo_height())), Image.Resampling.LANCZOS)
+        self.base_icon = ImageTk.PhotoImage(self.base_icon_image.resize((20, 20)), Image.Resampling.LANCZOS)
         
         # Root Window Config
         self.title("Laser Tag!")
@@ -35,10 +58,12 @@ class App(ttk.Window):
         self.debug_flags = flags
 
         # UDP Config
-        self.addr_from = "127.0.0.1"
-        self.addr_from_port = 7501
+        self.addr_to = "127.0.0.1"
 
-        self.send_to_location = (self.addr_from, self.addr_from_port)
+        # From feedback of Sprint 3
+        self.addr_to_port = 7500
+
+        self.send_to_location = (self.addr_to, self.addr_to_port)
 
         self.server_socket = None
         self.client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -53,7 +78,7 @@ class App(ttk.Window):
         self.green_team = {}
 
         self.points = {}
-
+        self.base = {}
 
         self.splash_screen_frame = None
         self.player_entry_frame = None
@@ -71,7 +96,41 @@ class App(ttk.Window):
         if list_of_flags == [True, False, False, True]:
             self.play_action_frame = PlayActionScene(self, self.db)
 
+        if list_of_flags == [True, False, False, False]:
+            self.red_team = {1: 1, 3: 3}
+            self.green_team = {2: 2, 4: 4}
+            self.points = {1: 0, 2: 0, 3: 0, 4: 0}
+            self.base = {1: False, 2: False, 3: False, 4: False}
+
 
     def start_game(self):
         self.play_action_frame = PlayActionScene(self, self.db)
         self.player_entry_frame.destroy()
+
+    def end_game(self):
+        self.broadcast(221)
+        self.broadcast(221)
+        self.broadcast(221)
+
+        self.play_action_frame.server_thread.stop()
+        self.play_action_frame.game_running = False
+
+    def broadcast(self, msg):
+        msg = str(msg)
+        self.client_socket.sendto(msg.encode(), self.send_to_location)
+        network_message(f"Broadcasted {msg} to {self.send_to_location[0]}:{self.send_to_location[1]}")
+
+    def reset(self):
+        self.player_entry_frame = PlayerEntryScene(self, self.db, self.client_socket)
+        self.player_entry_frame.update_list()
+
+        self.play_action_frame.destroy()
+        self.play_action_frame = None
+
+        for id in self.points:
+            self.points[id] = 0
+        
+        for id in self.base:
+            self.base[id] = False
+
+
