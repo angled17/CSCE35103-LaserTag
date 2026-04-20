@@ -18,10 +18,11 @@ class PlayActionScene(ttk.Frame):
     def __init__(self, container, database):
         super().__init__(container)
         
-
         self.game = container
         self.db = database
         self.queue = Queue()
+
+        self.game_running = True
 
         # if self.game.addr_from == "127.0.0.1":
         self.game.server_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -47,6 +48,8 @@ class PlayActionScene(ttk.Frame):
         self.time_frame = TimeFrame(self, self.game)
         self.time_frame.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)
 
+        self.reset_button = ttk.Button(self, text="Start Over!", command=self.reset)
+
         self.grid(row=0, column=0, sticky="n")
 
         self.check_queue()
@@ -68,7 +71,8 @@ class PlayActionScene(ttk.Frame):
         except Empty:
             pass
 
-        self.after(5, self.check_queue)
+        if self.game_running:
+            self.after(5, self.check_queue)
 
     
     def handle_event(self, code):
@@ -128,3 +132,10 @@ class PlayActionScene(ttk.Frame):
 
             
             self.players_frame.update_player_list()
+
+    
+    def show_button(self):
+        self.reset_button.grid(row=3, column=0, sticky="nsew", padx=10, pady=10)
+
+    def reset(self):
+        self.game.reset()

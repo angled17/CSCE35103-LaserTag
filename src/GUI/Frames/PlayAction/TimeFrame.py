@@ -1,6 +1,7 @@
 import tkinter as tk
 import ttkbootstrap as ttk
 
+from Logging.logger import network_message
 
 class TimeFrame(ttk.Frame):
     def __init__(self, container, main_game):
@@ -11,6 +12,9 @@ class TimeFrame(ttk.Frame):
 
         self.time_remaining_seconds = 360
 
+        if self.game.debug_flags["Debug"]:
+            self.time_remaining_seconds = 15
+
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
@@ -20,11 +24,26 @@ class TimeFrame(ttk.Frame):
         self.after(1000, self.timer)
 
     
-    def timer(self):
-        self.time_remaining_seconds -= 1
-        self.update_time_label()
+    def timer(self): 
 
-        self.after(1000, self.timer)
+        if self.time_remaining_seconds == 0:
+            self.game.end_game()
+
+            self.time_label.destroy()
+            self.time_label = ttk.Label(self, text=f"GAME OVER!", anchor="center")
+            self.time_label.grid(row=0, column=0, sticky="nsew")
+
+            self.game.server_socket.close()
+            network_message("UDP Server is closed!")
+
+            self.scene.show_button()
+
+        else:
+            self.time_remaining_seconds -= 1
+            self.update_time_label()
+
+        if self.scene.game_running:
+            self.after(1000, self.timer)
 
 
     def update_time_label(self):

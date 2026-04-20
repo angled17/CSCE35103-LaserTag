@@ -101,7 +101,7 @@ class AddPlayerFrame(ttk.Frame):
         self.scene.update_list()
         
         # Network Broadcast
-        self.scene.broadcast(str(equip_id))
+        self.game.broadcast(str(equip_id))
         
         self.add_player_id.set("Enter ID:")
         self.add_player_equip_id.set("Enter Equipment ID:")

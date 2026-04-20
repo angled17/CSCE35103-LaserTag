@@ -107,7 +107,30 @@ class App(ttk.Window):
         self.play_action_frame = PlayActionScene(self, self.db)
         self.player_entry_frame.destroy()
 
+    def end_game(self):
+        self.broadcast(221)
+        self.broadcast(221)
+        self.broadcast(221)
+
+        self.play_action_frame.server_thread.stop()
+        self.play_action_frame.game_running = False
+
     def broadcast(self, msg):
         msg = str(msg)
         self.client_socket.sendto(msg.encode(), self.send_to_location)
         network_message(f"Broadcasted {msg} to {self.send_to_location[0]}:{self.send_to_location[1]}")
+
+    def reset(self):
+        self.player_entry_frame = PlayerEntryScene(self, self.db, self.client_socket)
+        self.player_entry_frame.update_list()
+
+        self.play_action_frame.destroy()
+        self.play_action_frame = None
+
+        for id in self.points:
+            self.points[id] = 0
+        
+        for id in self.base:
+            self.base[id] = False
+
+
